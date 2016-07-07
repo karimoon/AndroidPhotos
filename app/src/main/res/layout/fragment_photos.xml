@@ -1,0 +1,59 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="?android:attr/colorBackground"
+tools:context="application.karim.com.androidphotos.Fragments.PhotosFragment">
+
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+
+
+        android:weightSum="6"
+
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+
+            android:background="#FFFFFF">
+
+            <android.support.v7.widget.RecyclerView
+
+                android:id="@+id/photos_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            android:layout_weight="1">
+
+            <Button
+                android:text="Upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:id="@+id/button2"
+                android:layout_below="@+id/albums_recycler_view"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+</FrameLayout>
