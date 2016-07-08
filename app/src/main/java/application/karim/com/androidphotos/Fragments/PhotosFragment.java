@@ -2,6 +2,9 @@ package application.karim.com.androidphotos.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -12,10 +15,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -38,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import application.karim.com.androidphotos.R;
 import application.karim.com.androidphotos.adapter.GridAlbumAdapter;
@@ -68,8 +77,11 @@ public class PhotosFragment extends BaseFragment {
     ArrayList<Object> alFBAlbum = new ArrayList<>();
 
 
-
-
+    public static final String UPLOAD_URL = "http://10.0.3.2/androidphotos/upload.php";
+    public static final String UPLOAD_KEY = "image";
+    public static final String TAG = "MY MESSAGE";
+    private Bitmap bitmap;
+    List<Bitmap> listbitmap;
 
 
     public PhotosFragment() {
@@ -104,6 +116,49 @@ public class PhotosFragment extends BaseFragment {
 
 
 
+    private class DownloadImages extends AsyncTask<List<Photo>, Void, Void> {
+        @Override
+        protected Void doInBackground(List<Photo>... params) {
+            // we use the OkHttp library from https://github.com/square/okhttp
+            //bitmap = getBitmapFromURL("https://pbs.twimg.com/profile_images/616076655547682816/6gMRtQyY.jpg");
+
+            List<Photo> array = params[0];
+            //String s = array.get(1);
+
+            listbitmap = new ArrayList<Bitmap>();
+
+            for (int i = 0; i < array.size(); i++)
+
+            {
+
+                try {
+                    bitmap = Glide.
+                            with(getActivity()).
+                            load(array.get(i).getSource()).
+                            asBitmap().
+                            into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+
+                    listbitmap.add(bitmap);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return null;
+            //return "Download failed";
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+
+            //imageView.setImageBitmap(listbitmap.get(0));
+            Toast.makeText(getActivity() , "Donwloaded cooooool" , Toast.LENGTH_LONG).show();
+        }
+    }
 
 
     @Override
