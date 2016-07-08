@@ -111,6 +111,7 @@ public class AlbumsFragment extends BaseFragment {
 
         adapter = new GridAlbumAdapter(getActivity() , list);
 
+///////git
 
         /*final LinearLayoutManager mlinearLayoutVertical = new LinearLayoutManager(getActivity());
         recyclerView.setAdapter(adapter);
