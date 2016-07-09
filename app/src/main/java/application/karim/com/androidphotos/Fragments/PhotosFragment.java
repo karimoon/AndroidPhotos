@@ -22,6 +22,7 @@ import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,6 +92,7 @@ public class PhotosFragment extends BaseFragment {
     private Bitmap bitmap;
     List<Bitmap> listbitmap;
     ProgressBar progressBar;
+    TextView txtview;
 
 
     public PhotosFragment() {
@@ -123,14 +125,19 @@ public class PhotosFragment extends BaseFragment {
             protected void onPreExecute() {
                 super.onPreExecute();
                 progressBar.setVisibility(View.VISIBLE);
-                //loading = ProgressDialog.show(getActivity(), "Uploading Image", "Please wait...",true,true);
+                ((TextView) getActivity().findViewById(R.id.txupload)).setText("Uploading...");
+
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+
+                ((RelativeLayout) getActivity().findViewById(R.id.relativelayoutmessage)).setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                ((TextView) getActivity().findViewById(R.id.txupload)).setText("Done");
                 //loading.dismiss();
-                Toast.makeText(getActivity(),"Finitooooo",Toast.LENGTH_LONG).show();
+
             }
 
             @Override
@@ -177,6 +184,7 @@ public class PhotosFragment extends BaseFragment {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
 
         callbackManager = CallbackManager.Factory.create();
+
 
 
 
@@ -230,7 +238,6 @@ public class PhotosFragment extends BaseFragment {
         protected void onPostExecute(Void result) {
 
             //imageView.setImageBitmap(listbitmap.get(0));
-            Toast.makeText(getActivity() , "Donwloaded cooooool" , Toast.LENGTH_LONG).show();
             uploadImage();
         }
     }
@@ -244,6 +251,8 @@ public class PhotosFragment extends BaseFragment {
         parameters.putString("fields", "images");
 
         progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+
+
 
          Photolistdownload = new ArrayList<Photo>();
 

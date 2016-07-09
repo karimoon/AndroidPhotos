@@ -65,12 +65,8 @@ public class MainFragment extends BaseFragment {
     public FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
-            AccessToken accessToken = loginResult.getAccessToken();
-            Profile profile = Profile.getCurrentProfile();
 
-
-
-            new GraphRequest(
+        new GraphRequest(
                     AccessToken.getCurrentAccessToken(),
                     "/"+AccessToken.getCurrentAccessToken().getUserId()+"/albums",
                     null,
@@ -178,7 +174,7 @@ public class MainFragment extends BaseFragment {
         profileTracker = new ProfileTracker() {
             @Override
             protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
-                //displayMessage(newProfile);
+
             }
         };
 
@@ -222,7 +218,6 @@ public class MainFragment extends BaseFragment {
 
                         Album albumclicked = Albumlist.get(position);
 
-                        Log.d("tttttttttt","sssssss");
                         loadFragment_home(new PhotosFragment(albumclicked.getId()));
                     }
                 })
