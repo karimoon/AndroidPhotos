@@ -1,5 +1,6 @@
 package application.karim.com.androidphotos.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,9 +45,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -55,6 +60,7 @@ import application.karim.com.androidphotos.model.Album;
 import application.karim.com.androidphotos.model.Photo;
 import application.karim.com.androidphotos.utils.BaseFragment;
 import application.karim.com.androidphotos.utils.RecyclerItemClickListener;
+import application.karim.com.androidphotos.utils.RequestHandler;
 
 
 /**
@@ -66,10 +72,12 @@ public class PhotosFragment extends BaseFragment {
     private TextView textView;
     ListPhotoAdapter adapter;
 
+    Button uplaodbtn;
     RecyclerView recyclerView;
     private AccessTokenTracker accessTokenTracker;
     private ProfileTracker profileTracker;
     List<Photo> Photolist;
+    List<Photo> Photolistdownload;
     GridView gridView ;
     Photo photo;
     String albumid ;
@@ -82,6 +90,7 @@ public class PhotosFragment extends BaseFragment {
     public static final String TAG = "MY MESSAGE";
     private Bitmap bitmap;
     List<Bitmap> listbitmap;
+    ProgressBar progressBar;
 
 
     public PhotosFragment() {
@@ -95,6 +104,71 @@ public class PhotosFragment extends BaseFragment {
         this.albumid=albumid;
     }
 
+
+    public String getStringImage(Bitmap bmp){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
+
+    private void uploadImage(){
+        class UploadImage extends AsyncTask<List<Bitmap>,Integer,String>{
+
+            ProgressDialog loading;
+            RequestHandler rh = new RequestHandler();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                progressBar.setVisibility(View.VISIBLE);
+                //loading = ProgressDialog.show(getActivity(), "Uploading Image", "Please wait...",true,true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                //loading.dismiss();
+                Toast.makeText(getActivity(),"Finitooooo",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected String doInBackground(List<Bitmap>... params) {
+
+                String result = null;
+
+                List<Bitmap> lisbmp = params[0];
+                if(lisbmp!=null)
+                {
+
+                for (int i = 0; i < lisbmp.size(); i++)
+
+                {
+                    String uploadImage = getStringImage(lisbmp.get(i));
+
+                    HashMap<String,String> data = new HashMap<>();
+                    data.put(UPLOAD_KEY, uploadImage);
+
+                     result = rh.sendPostRequest(UPLOAD_URL,data);
+                    publishProgress(((i+1)*100)/lisbmp.size());
+                }
+                }
+
+
+                return result;
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                super.onProgressUpdate(values);
+                progressBar.setProgress(values[0]);
+            }
+        }
+
+        UploadImage ui = new UploadImage();
+        ui.execute(listbitmap);
+    }
 
 
     @Override
@@ -157,6 +231,7 @@ public class PhotosFragment extends BaseFragment {
 
             //imageView.setImageBitmap(listbitmap.get(0));
             Toast.makeText(getActivity() , "Donwloaded cooooool" , Toast.LENGTH_LONG).show();
+            uploadImage();
         }
     }
 
@@ -167,6 +242,10 @@ public class PhotosFragment extends BaseFragment {
 
         Bundle parameters = new Bundle();
         parameters.putString("fields", "images");
+
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+
+         Photolistdownload = new ArrayList<Photo>();
 
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -249,10 +328,31 @@ public class PhotosFragment extends BaseFragment {
                         CheckBox ck = (CheckBox) view.findViewById(R.id.checkBox);
 
                         ck.setChecked(!ck.isChecked());
+
+                        if(ck.isChecked())
+                        {
+                            Photolistdownload.add(Photoclicked);
+                        }
+                        else
+                        {
+                            Photolistdownload.remove(Photoclicked);
+                        }
                     }
                 })
         );
 
+         uplaodbtn = (Button) getActivity().findViewById(R.id.buttonupload);
+
+        uplaodbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DownloadImages().execute(Photolistdownload);
+
+
+            }
+        });
+
+        //new v().execute(Photolistdownload);
 
     }
 

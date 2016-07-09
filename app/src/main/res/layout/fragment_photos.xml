@@ -9,12 +9,12 @@ tools:context="application.karim.com.androidphotos.Fragments.PhotosFragment">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#FFFFFF"
         android:orientation="vertical"
 
 
-        android:weightSum="6"
+        android:weightSum="7"
 
         >
 
@@ -38,17 +38,31 @@ tools:context="application.karim.com.androidphotos.Fragments.PhotosFragment">
             android:layout_width="match_parent"
             android:layout_height="0dp"
 
-            android:layout_weight="1">
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:layout_weight="2">
 
             <Button
                 android:text="Upload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:id="@+id/button2"
+                android:id="@+id/buttonupload"
                 android:layout_below="@+id/albums_recycler_view"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+
+                android:maxHeight="25dip"
+                android:minHeight="25dip"
+                android:visibility="invisible" >
+            </ProgressBar>
         </LinearLayout>
 
 
