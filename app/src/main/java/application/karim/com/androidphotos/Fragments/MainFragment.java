@@ -51,17 +51,17 @@ import application.karim.com.androidphotos.utils.RecyclerItemClickListener;
 public class MainFragment extends BaseFragment {
 
     private CallbackManager callbackManager;
-    private TextView textView;
+
     GridAlbumAdapter adapter;
 
     RecyclerView recyclerView;
     private AccessTokenTracker accessTokenTracker;
     private ProfileTracker profileTracker;
     List<Album> Albumlist;
-    GridView gridView ;
+
     Album album;
 
-    ArrayList<Object> alFBAlbum = new ArrayList<>();
+
     public FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
@@ -100,14 +100,7 @@ public class MainFragment extends BaseFragment {
 
                                         //////////////sort list////////////////
 
-                                        if (Albumlist.size() > 0) {
-                                            Collections.sort(Albumlist, new Comparator<Album>() {
-                                                @Override
-                                                public int compare(final Album object1, final Album object2) {
-                                                    return object1.getName().compareTo(object2.getName());
-                                                }
-                                            } );
-                                        }
+                                        sortlistbyname(Albumlist);
 
                                     }
                                 } else {
@@ -160,30 +153,21 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
-
-        callbackManager = CallbackManager.Factory.create();
-
-        accessTokenTracker= new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldToken, AccessToken newToken) {
-
-            }
-        };
-
-        profileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
-
-            }
-        };
-
-        accessTokenTracker.startTracking();
-        profileTracker.startTracking();
 
 
 
+    }
 
+    public void sortlistbyname(List<Album> list)
+    {
+        if (list.size() > 0) {
+            Collections.sort(list, new Comparator<Album>() {
+                @Override
+                public int compare(final Album object1, final Album object2) {
+                    return object1.getName().compareTo(object2.getName());
+                }
+            } );
+        }
 
     }
 
@@ -231,12 +215,7 @@ public class MainFragment extends BaseFragment {
         super.onAttach(context);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
 
-    }
 
 
 
