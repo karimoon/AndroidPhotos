@@ -4,12 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
+
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
@@ -24,23 +24,21 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
+
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,16 +46,15 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import application.karim.com.androidphotos.R;
-import application.karim.com.androidphotos.adapter.GridAlbumAdapter;
+
 import application.karim.com.androidphotos.adapter.ListPhotoAdapter;
-import application.karim.com.androidphotos.model.Album;
+
 import application.karim.com.androidphotos.model.Photo;
 import application.karim.com.androidphotos.utils.BaseFragment;
 import application.karim.com.androidphotos.utils.RecyclerItemClickListener;
@@ -92,7 +89,6 @@ public class PhotosFragment extends BaseFragment {
     private Bitmap bitmap;
     List<Bitmap> listbitmap;
     ProgressBar progressBar;
-    TextView txtview;
 
 
     public PhotosFragment() {
@@ -136,7 +132,7 @@ public class PhotosFragment extends BaseFragment {
                 ((RelativeLayout) getActivity().findViewById(R.id.relativelayoutmessage)).setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 ((TextView) getActivity().findViewById(R.id.txupload)).setText("Done");
-                //loading.dismiss();
+
 
             }
 
@@ -201,11 +197,10 @@ public class PhotosFragment extends BaseFragment {
     private class DownloadImages extends AsyncTask<List<Photo>, Void, Void> {
         @Override
         protected Void doInBackground(List<Photo>... params) {
-            // we use the OkHttp library from https://github.com/square/okhttp
-            //bitmap = getBitmapFromURL("https://pbs.twimg.com/profile_images/616076655547682816/6gMRtQyY.jpg");
+
 
             List<Photo> array = params[0];
-            //String s = array.get(1);
+
 
             listbitmap = new ArrayList<Bitmap>();
 
@@ -231,13 +226,12 @@ public class PhotosFragment extends BaseFragment {
 
 
             return null;
-            //return "Download failed";
+
         }
 
         @Override
         protected void onPostExecute(Void result) {
 
-            //imageView.setImageBitmap(listbitmap.get(0));
             uploadImage();
         }
     }
@@ -263,7 +257,7 @@ public class PhotosFragment extends BaseFragment {
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
-            /* handle the result */
+
                         Log.v("TAG", "Facebook Photos response: " + response);
 
 
@@ -296,7 +290,6 @@ public class PhotosFragment extends BaseFragment {
 
                             }
 
-                            //set your adapter here
 
                             recyclerView = (RecyclerView) getActivity().findViewById(R.id.photos_recycler_view);
 
@@ -308,12 +301,6 @@ public class PhotosFragment extends BaseFragment {
                             recyclerView.setAdapter(adapter);
                             recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-/*
-                            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity() , 2);
-                            recyclerView.setAdapter(adapter);
-                            recyclerView.setLayoutManager(gridLayoutManager);
-
-                            recyclerView.setItemAnimator(new DefaultItemAnimator());*/
                         }
                         else {
                             Log.v("TAG", response.getError().toString());
@@ -361,8 +348,6 @@ public class PhotosFragment extends BaseFragment {
             }
         });
 
-        //new v().execute(Photolistdownload);
-
     }
 
     @Override
@@ -377,11 +362,6 @@ public class PhotosFragment extends BaseFragment {
 
     }
 
-    private void displayMessage(Profile profile){
-        if(profile != null){
-            textView.setText(profile.getName());
-        }
-    }
 
     @Override
     public void onStop() {
